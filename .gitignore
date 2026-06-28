@@ -8,6 +8,7 @@ backend/**/*.py[cod]
 backend/.pytest_cache/
 backend/.mypy_cache/
 
+
 # Environment Variables
 backend/.env
 
@@ -27,6 +28,7 @@ backend/app/exports/*
 frontend/node_modules/
 frontend/dist/
 frontend/.venv
+frontend/.env
 
 # ==========================
 # IDE
@@ -51,4 +53,13 @@ htmlcov/
 # ==========================
 *.sqlite3
 *.db
+
+venv
+env
+*/.DS_Store
+.DS_Store
+*/*.pyc
+*/__pycache__/*
+__pycache__/*.pyc
+*.pyc
 ```
