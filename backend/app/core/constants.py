@@ -1,0 +1,9 @@
+MAX_QUESTIONS = 50
+
+MIN_QUESTIONS = 1
+
+SUPPORTED_FILE_TYPES = [
+    ".pdf"
+]
+
+DEFAULT_MODEL = "llama3-70b-8192"
