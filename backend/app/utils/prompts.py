@@ -1,27 +1,32 @@
 QUIZ_PROMPT = """
-You are an expert quiz generator.
+You are an expert exam paper creator.
 
-Generate {questions} multiple choice questions.
+Generate exactly {questions} multiple-choice questions from the following text.
 
 Rules:
+- Return ONLY valid JSON.
+- Do NOT include markdown.
+- Do NOT include ```json.
+- Do NOT explain anything.
+- Every question must have four options.
+- One correct answer.
 
-1. Four options only.
-2. One correct answer.
-3. Return ONLY JSON.
-4. No markdown.
-5. No explanation.
-
-JSON Format:
+JSON format:
 
 [
-    {
-        "question":"",
-        "options":["","","",""],
-        "answer":""
-    }
+  {{
+    "question": "Question here",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": "Option A"
+  }}
 ]
 
-Document:
+TEXT:
 
 {text}
 """

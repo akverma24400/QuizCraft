@@ -1,10 +1,23 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.jsx'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
 
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+import { Toaster } from "react-hot-toast";
+
+import App from "./App";
+
+import { QuizProvider } from "./context/QuizContext";
+
+import "./index.css";
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <React.StrictMode>
+    <BrowserRouter>
+      <QuizProvider>
+        <App />
+
+        <Toaster position="top-right" />
+      </QuizProvider>
+    </BrowserRouter>
+  </React.StrictMode>,
+);
