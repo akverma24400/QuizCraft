@@ -1,11 +1,10 @@
-from fastapi import APIRouter
-from fastapi import File
-from fastapi import UploadFile
-from fastapi import Query
+from typing import List
+
+from fastapi import APIRouter, File, UploadFile, Query
 
 from app.core.security import (
     validate_pdf,
-    validate_file_size
+    validate_file_size,
 )
 
 from app.services.file_service import FileService
@@ -16,32 +15,78 @@ router = APIRouter()
 
 
 @router.post("/upload")
-async def upload_pdf(
-    file: UploadFile = File(...),
-    questions: int = Query(10, ge=1, le=50)
+async def upload_files(
+    files: List[UploadFile] = File(...),
+    questions: int = Query(10, ge=1, le=50),
 ):
 
-    validate_pdf(file)
+    combined_text = ""
 
-    await validate_file_size(file)
+    parsed_quiz = []
 
-    path = await FileService.save(file)
+    saved_files = []
 
     try:
 
-        text = await PDFService.extract_text(path)
+        for file in files:
+
+            validate_pdf(file)
+
+            await validate_file_size(file)
+
+            path = await FileService.save(file)
+
+            saved_files.append(path)
+
+            # Extract raw text
+            text = await PDFService.extract_text(path)
+
+            combined_text += "\n\n" + text
+
+            # Try parser first
+            quiz = await PDFService.extract_quiz(path)
+
+            if len(quiz) > 0:
+
+                parsed_quiz.extend(quiz)
+
+        # ------------------------
+        # If parser succeeded
+        # ------------------------
+
+        if len(parsed_quiz) > 0:
+
+            print("\n✅ Solved Paper Detected\n")
+
+            return {
+                "success": True,
+                "mode": "parsed",
+                "uploaded_files": len(files),
+                "total_questions": len(parsed_quiz),
+                "questions": parsed_quiz,
+            }
+
+        # ------------------------
+        # Otherwise use Groq
+        # ------------------------
+
+        print("\n🤖 Using Groq Quiz Generator\n")
 
         quiz = await QuizService().generate_quiz(
-            text,
-            questions
+            combined_text,
+            questions,
         )
 
         return {
             "success": True,
+            "mode": "generated",
+            "uploaded_files": len(files),
             "total_questions": len(quiz),
-            "questions": quiz
+            "questions": quiz,
         }
 
     finally:
 
-        FileService.delete(path)
+        for path in saved_files:
+
+            FileService.delete(path)

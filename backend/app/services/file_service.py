@@ -11,6 +11,11 @@ class FileService:
     @staticmethod
     async def save(file):
 
+        os.makedirs(
+            FileService.UPLOAD_FOLDER,
+            exist_ok=True
+        )
+
         filename = generate_filename(file.filename)
 
         path = os.path.join(

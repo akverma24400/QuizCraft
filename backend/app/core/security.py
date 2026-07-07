@@ -1,7 +1,14 @@
 from fastapi import HTTPException, UploadFile
 
 
-ALLOWED_EXTENSIONS = [".pdf"]
+ALLOWED_EXTENSIONS = [
+    ".pdf",
+    ".doc",
+    ".docx",
+    ".ppt",
+    ".pptx",
+    ".txt"
+]
 
 MAX_FILE_SIZE = 10 * 1024 * 1024
 
